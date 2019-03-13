@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--
+------------------------------------------------------------------------------------------
+COMP1230 -  Assignment 1
+------------------------------------------------------------------------------------------
+Objective: To create a simple PHP application using a flat file (no database).
+For this project, you will be creating an application called CONTACT. The application is for personal use.
+
+Operations:
+The user must be able to perform the following operations:
+1. list contacts (show first, last name, picture and modify and delete links in a table)
+2. edit contact by clicking on modify link in the contacts list
+3. deleting a contact by clicking on delete link in the contact list (use javascript to confirm the
+deletion)
+4. search for a contact by the first name and/or last name
+5. Create a new contact.
+
+****************************************************************************************
+        File with HTML and PHP -
+        Operation 4 - Search for a contact by the first name and/or last nam
+****************************************************************************************
+
+-->
+    <meta charset="UTF-8">
+    <meta name="keywords" content="PHP, Assignment, Comp1230">
+    <meta name="author" content="Renata Moura">
+    <meta name="description" content="PHP Assignment">
+    <meta charset="UTF-8">
+
+    <title>Search Contact</title>
+    <!-- CSS style -->
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+
+<body>
+
+
+<header>
+    <h1>Search Contact</h1>
+</header>
+
+
+<form>
+    <input type="button" value="Return" onClick="JavaScript: window.history.back();">
+</form>
+
+
+<table width='100%' class='tabelLines'>
+    <tr>
+     <!--   <td width="1%" hidden> ID </td>-->
+        <td width="10%">Picture </td>
+        <td width="1%">Title </td>
+        <td width="8%">First Name </td>
+        <td width="8%">Last Name </td>
+        <td width="14%">Email </td>
+        <td width="15%">Site </td>
+        <td width="7%">Cell Number </td>
+        <td width="8%">Home Number </td>
+        <td width="7%">Office Number </td>
+        <td width="7%">Twitter </td>
+        <td width="7%">Facebook </td>
+        <td width="15%">Coments </td>
+        <td width='10%'></td>
+    </tr>
+
+<?php
+
+$fnameSearch = strtolower(@$_POST['fnameSearch']);
+$lnameSearch= strtolower(@$_POST['lnameSearch']);
+
+include 'functions.php';
+
+if (isset($_POST['BTSearch'])) {
+    $bigArray = openfile();
+
+$count =0;
+     for ($i = 0; $i < count($bigArray); $i++)
+     {
+         if(!$bigArray[$i]['id']== null)
+         {
+             if ($fnameSearch == strtolower($bigArray[$i]["fname"]) || $lnameSearch == strtolower($bigArray[$i]["lname"]))
+             {
+                 $count++;
+                 echo "<tr class='tabelLines'>";
+
+                 // echo "<td hidden width='1%'>".$bigArray[$i]['id']."</td>";
+                 echo "<td width='10%'> ";
+                 echo "<img width=100px height=100px align=right src='images/" . $bigArray[$i]['id'] . ".jpeg'>";
+                 echo "</td>";
+                 echo "<td width='1%'>" . $bigArray[$i]['title'] . "</td>";
+                 echo "<td width='8%'>" . $bigArray[$i]['fname'] . "</td>";
+                 echo "<td width='8%'>" . $bigArray[$i]['lname'] . "</td>";
+                 echo "<td width='14%'>" . $bigArray[$i]['email'] . "</td>";
+                 echo "<td width='15%'>" . $bigArray[$i]['site'] . "</td>";
+                 echo "<td width='7%'>" . $bigArray[$i]['cellnumber'] . "</td>";
+                 echo "<td width='8%'>" . $bigArray[$i]['homenumber'] . "</td>";
+                 echo "<td width='8%'>" . $bigArray[$i]['officenumber'] . "</td>";
+                 echo "<td width='7%'>" . $bigArray[$i]['twitter'] . "</td>";
+                 echo "<td width='7%'>" . $bigArray[$i]['facebook'] . "</td>";
+                 echo "<td width='15%'>" . $bigArray[$i]['comments'] . "</td>";
+                 echo "<td>";
+
+                 echo "<form method='post' action='editprocess.phtml'>";
+                 echo "<button type='submit' name='BTEdit' value = " . $bigArray[$i]['id'] . ">Edit</button>";
+                 //echo "<button type = 'submit' name ='BTDelete'> Delete </button>";
+                 echo "</form>";
+                 echo "</td>";
+
+                 echo "</form></td>";
+
+                 echo "<td>";
+                 echo "<form method='post' action='delete.phtml'>";
+                 echo "<button type='submit' name='BTDelete' value = " . $bigArray[$i]['id'] . ">Delete</button>";
+                 echo "</form></td>";
+                 echo "</tr>";
+
+             }
+         }
+     }
+     if($count ==0)
+        {
+            echo "Contact no found!";
+        }
+
+     echo "</table>";
+
+
+    endfile();
+
+}
+?>
+    <footer>
+        <!--View Source link -->
+        <a href="/folder_view/vs.php?s=<?php echo __FILE__?>" target="_blank">View Source</a>
+    </footer>
+</body>
+
+</html>

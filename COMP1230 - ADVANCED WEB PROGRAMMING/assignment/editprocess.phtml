@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+    ------------------------------------------------------------------------------------------
+COMP1230 -  Assignment 1
+------------------------------------------------------------------------------------------
+Objective: To create a simple PHP application using a flat file (no database).
+    For this project, you will be creating an application called CONTACT. The application is for personal use.
+
+Operations:
+The user must be able to perform the following operations:
+1. list contacts (show first, last name, picture and modify and delete links in a table)
+2. edit contact by clicking on modify link in the contacts list
+3. deleting a contact by clicking on delete link in the contact list (use javascript to confirm the
+deletion)
+4. search for a contact by the first name and/or last name
+5. Create a new contact.
+
+****************************************************************************************
+             File with HTML and PHP -
+             Operation 2 - Edit contact by clicking on modify link in the contacts list.
+****************************************************************************************
+
+    -->
+
+    <meta charset="UTF-8">
+    <meta name="keywords" content="PHP, Assignment, Comp1230">
+    <meta name="author" content="Renata Moura">
+    <meta name="description" content="PHP Assignment">
+    <meta charset="UTF-8">
+
+    <title>Contact</title>
+
+    <!-- CSS style -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header>
+    <h1>Edit Contact</h1>
+</header>
+
+<?php
+include 'functions.php';
+
+/*
+====================================================
+    Call function Find Contact in the file
+====================================================
+ */
+
+$contact=[];
+if (isset($_POST['BTEdit']))
+{
+   $id = $_POST['BTEdit'];
+   $contact = findContact($id);
+
+}
+elseif(isset($_POST['BTDelete']))
+{
+
+    $id = @$_POST['BTSave'];
+    delete();
+}
+
+/*
+====================================================
+    Save new information to file
+====================================================
+ */
+
+if(isset($_POST['BTSave']))
+{
+    $id=@$_POST['BTSave'];
+    savefile();
+}
+
+/*
+====================================================
+ Image upload
+====================================================
+*/
+if(isset($_FILES['picture']))
+{
+
+    $ext = strtolower(substr($_FILES['picture']['name'],-4));
+
+    $dir = './images/';
+    if(!file_exists($dir))
+    {
+        mkdir($dir,644);
+    }
+    move_uploaded_file($_FILES['picture']['tmp_name'],$dir.$contact['$id'].".jpeg");
+}
+
+?>
+<!--
+====================================================
+HTML form
+====================================================
+-->
+<section id = "table1">
+    <table width="600" border="0" align="center" cellpadding="0" cellspacing="1">
+        <tr>
+            <td>
+                <form name="form1" method="post" action="" onsubmit="" enctype="multipart/form-data">
+                    <table width="100%" border="0" cellpadding="3" cellspacing="1">
+                        <p><span class="error">* Required field.</span></p>
+
+                        <tr>
+                        <tr>
+                            <td align='center' hidden> Id:</td>
+                            <td></td>
+                            <td>
+                                <label for="id"></label>
+                                <input name="id" id="id" type="hidden" value="<?php echo @$contact['id']?>"></td>
+
+                        </tr>
+                        <tr>
+                            <td>Title:</td>
+                            <td></td>
+                            <td  align='center' id="title">
+                                <label for="mr">Mr.</label>
+                                <input value="Mr." type="radio" name="title" id="mr"
+                                        <?php echo @$contact['title'] == 'Mr.'? "checked" : " " ;?>required />
+
+                                <label for="mrs">Mrs.</label>
+                                <input type="radio" name="title" id="mrs" value="Mrs."
+                                    <?php echo @$contact['title'] == 'Mrs.'? "checked" : " " ;?>/>
+
+                                <label for="miss">Miss</label>
+                                <input type="radio" name="title" id="miss" value="Miss."
+                                    <?php echo @$contact['title'] == 'Miss.'? "checked" : " " ;?>/>
+
+                                <label for="ms">Ms.</label>
+                                <input type="radio" name="title" id="ms" value="Ms."
+                                    <?php echo @$contact['title'] == 'Ms.'? "checked" : " " ;?>/>
+
+                                <label for="dr">Dr. </label>
+                                <input type="radio" name="title" id="dr" value="Dr."
+                                    <?php echo @$contact['title'] == 'Dr.'? "checked" : " " ;?>/>
+                                <span class="error"> *</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td width="19%" align='center'> First Name:</td>
+                            <td width="2%"></td>
+                            <td width="78%">
+                                <label for="fname"></label>
+                                <input name="fname" type="text" id="fname" size="50"
+                                       value ="<?php echo @$contact['fname']?>" required>
+                                <span class="error"> *</span>
+                        </tr>
+
+
+                        <tr>
+                            <td align='center'> Last Name:</td>
+                            <td></td>
+                            <td>
+                                <label for="lname"></label>
+                                <input name="lname" type="text" id="lname" size="50"
+                                       value ="<?php echo @$contact['lname']?>" required>
+                                <span class="error"> *</span>
+                        </tr>
+
+                        <tr>
+                            <td align='center'> Email:</td>
+                            <td></td>
+                            <td>
+                                <label for="email"></label>
+                                <input name="email" type="text" id="email" size="50"
+                                       value ="<?php echo @$contact['email']?>" ></td>
+                        </tr>
+
+                        <tr>
+                            <td align='center'> Site:</td>
+                            <td></td>
+                            <td>
+                                <label for="site"></label>
+                                <input name="site" type="text" id="site" size="50"
+                                       value ="<?php echo @$contact['site']?>" ></td>
+                        </tr>
+
+                        <tr>
+                            <td align='center'> Cell Number:</td>
+                            <td></td>
+                            <td>
+                                <label for="cellnumber"></label>
+                                <input name="cellnumber" type="text" id="cellnumber" size="50"
+                                       value ="<?php echo @$contact['cellnumber']?>" ></td>
+                        </tr>
+
+                        <tr>
+                            <td align='center'> Home number:</td>
+                            <td></td>
+                            <td>
+                                <label for="homenumber"></label>
+                                <input name="homenumber" type="text" id="homenumber" size="50
+                                 value ="<?php echo@$contact['homenumber']?>" ></td>
+                        </tr>
+
+                        <tr>
+                            <td align='center'> Office number:</td>
+                            <td></td>
+                            <td>
+                                <label for="officenumber"></label>
+                                <input name="officenumber" type="text" id="officenumber" size="50"
+                                       value ="<?php echo @$contact['officenumber']?>" >
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td align='center'> Twitter:</td>
+                            <td></td>
+                            <td>
+                                <label for="twitter"></label>
+                                <input name="twitter" type="text" id="twitter" size="50"
+                                       value ="<?php echo @$contact['twitter']?>" >
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td align='center'> Facebook:</td>
+                            <td></td>
+                            <td>
+                                <label for="facebook"></label>
+                                <input name="facebook" type="text" id="facebook" size="50"
+                                       value ="<?php echo @$contact['facebook']?>" >
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td align='center'> Comments:</td>
+                            <td></td>
+                            <td>
+                                <label for="comments"></label>
+                                <textarea name="comments" cols="50" rows="5" id="comments">
+                                          <?php echo @$contact['comments']?></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td> Picture:</td>
+                            <td></td>
+                            <td>
+                                <label for="picture"></label>
+                                <input type="file" id="picture" size="50" name="picture" accept="image/*"
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <button type='submit' name='BTSave' value = "$contact['id']">Save</button>
+
+                            </td>
+                        </tr>
+
+                        <tr>
+
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <form name="form1" method="post" action="delete.phtml">
+                                    <button type = 'submit' name ='BTDelete' value = "$contact['id']"> Delete </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</section>
+
+<section id = "table4">
+    <table width="200" border="0" align="center" cellpadding="1" cellspacing="0">
+        <tr>
+        <td width="100%">
+            <img width=300px height=300px align=right src="images/<?php echo $contact['id'].".jpeg"?>">
+        </tr>
+    </table>
+
+</section>
+
+<footer>
+    <!--View Source link -->
+    <a href="/folder_view/vs.php?s=<?php echo __FILE__?>" target="_blank">View Source</a>
+</footer>
+</body>
+
+</html>

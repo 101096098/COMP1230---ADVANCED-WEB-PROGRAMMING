@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--
+    ------------------------------------------------------------------------------------------
+COMP1230 -  Assignment 1
+------------------------------------------------------------------------------------------
+Objective: To create a simple PHP application using a flat file (no database).
+    For this project, you will be creating an application called CONTACT. The application is for personal use.
+
+Operations:
+The user must be able to perform the following operations:
+1. list contacts (show first, last name, picture and modify and delete links in a table)
+2. edit contact by clicking on modify link in the contacts list
+3. deleting a contact by clicking on delete link in the contact list (use javascript to confirm the
+deletion)
+4. search for a contact by the first name and/or last name
+5. Create a new contact.
+
+****************************************************************************************
+                File with HTML and PHP
+                Operation 5 - Create a new contact.
+****************************************************************************************
+
+    -->
+
+    <meta charset="UTF-8">
+
+    <meta name="keywords" content="PHP, Assignment, Comp1230">
+    <meta name="author" content="Renata Moura">
+    <meta name="description" content="PHP Assignment">
+    <meta charset="UTF-8">
+
+    <!-- CSS style -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+<header>
+<h1>Contacts</h1>
+</header>
+
+
+<?php
+include "functions.php";
+/*
+====================================================
+Declare variables
+====================================================
+*/
+$id = @$_POST['id'];
+$title = @$_POST['title'];
+$fname = @$_POST['fname'];
+$lname = @$_POST['lname'];
+$email = @$_POST['email'];
+$site = @$_POST['site'];
+$cellnumber = @$_POST['cellnumber'];
+$homenumber = @$_POST['homenumber'];
+$officenumber = @$_POST['officenumber'];
+$twitter = @$_POST['twitter'];
+$facebook = @$_POST['facebook'];
+$picture = @$_POST['picture'];
+$comments = @$_POST['comments'];
+
+/*
+====================================================
+    Call function Add contact and Get ID
+====================================================
+ */
+
+
+if (isset($_POST['BTSubmit']))
+{
+    $id = getID();
+    addContact($id,$title, $fname, $lname, $email, $site, $cellnumber, $homenumber, $officenumber,
+        $twitter, $facebook, $comments);
+
+}
+
+/*
+====================================================
+ Image upload
+====================================================
+*/
+    if(isset($_FILES['picture']))
+    {
+
+       $ext = strtolower(substr($_FILES['picture']['name'],-4));
+
+        $dir = './images/';
+        if(!file_exists($dir))
+        {
+            mkdir($dir,644);
+        }
+        move_uploaded_file($_FILES['picture']['tmp_name'],$dir.$id.".jpeg");
+    }
+
+?>
+
+<!--
+------------------------------------------------------------------------------------------
+Creating HTML template:
+A contract must at least have the following fields (you are free to add more if you need)
+• * title       • * first name      • * last name   • email
+• site          • cell number       • home number   • office number
+• twitter URL   • facebook URL      • picture       • comment
+* indicates the field is a mandatory field and must be presented when the form is
+submitted.
+-->
+<section id = "table1">
+    <table width="600" border="0" align="center" cellpadding="0" cellspacing="1">
+        <tr>
+            <td>
+                <form name="form1" method="post" action="" onsubmit="" enctype="multipart/form-data">
+                    <table width="100%" border="0" cellpadding="3" cellspacing="1">
+                        <p><span class="error">* Required field.</span></p>
+
+                        <tr>
+                            <td>Title:</td>
+                            <td></td>
+                            <td id="title">
+                                <label for="mr">Mr.</label>
+                                <input value="Mr." type="radio" name="title" id="mr" required />
+                                <label for="mrs">Mrs.</label>
+                                <input type="radio" name="title" id="mrs" value="Mrs."/>
+                                <label for="miss">Miss</label>
+                                <input type="radio" name="title" id="miss" value="Miss."/>
+                                <label for="ms">Ms.</label>
+                                <input type="radio" name="title" id="ms" value="Ms."/>
+                                <label for="dr">Dr. </label>
+                                <input type="radio" name="title" id="dr" value="Dr."/>
+                                <span class="error"> *</span>
+                        </tr>
+                        <tr>
+                            <td width="19%"> First Name:</td>
+                            <td width="2%"></td>
+                            <td width="78%">
+                                <label for="fname"></label>
+                                <input name="fname" type="text" id="fname" size="50" required>
+                                <span class="error"> *</span>
+                        </tr>
+                        <tr>
+                            <td> Last Name:</td>
+                            <td></td>
+                            <td>
+                                <label for="lname"></label>
+                                <input name="lname" type="text" id="lname" size="50" required>
+                                <span class="error"> *</span>
+                        </tr>
+                        <tr>
+                            <td> Email:</td>
+                            <td></td>
+                            <td>
+                                <label for="email"></label>
+                                <input name="email" type="text" id="email" size="50"></td>
+                        </tr>
+                        <tr>
+                            <td> Site:</td>
+                            <td></td>
+                            <td>
+                                <label for="site"></label>
+                                <input name="site" type="text" id="site" size="50"></td>
+                        </tr>
+                        <tr>
+                            <td> Cell Number:</td>
+                            <td></td>
+                            <td>
+                                <label for="cellnumber"></label>
+                                <input name="cellnumber" type="text" id="cellnumber" size="50"></td>
+                        </tr>
+                        <tr>
+                            <td> Home number:</td>
+                            <td></td>
+                            <td>
+                                <label for="homenumber"></label>
+                                <input name="homenumber" type="text" id="homenumber" size="50"></td>
+                        </tr>
+                        <tr>
+                            <td> Office number:</td>
+                            <td></td>
+                            <td>
+                                <label for="officenumber"></label>
+                                <input name="officenumber" type="text" id="officenumber" size="50"></td>
+                        </tr>
+                        <tr>
+                            <td> Twitter:</td>
+                            <td></td>
+                            <td>
+                                <label for="twitter"></label>
+                                <input name="twitter" type="text" id="twitter" size="50"></td>
+                        </tr>
+                        <tr>
+                            <td> Facebook:</td>
+                            <td></td>
+                            <td>
+                                <label for="facebook"></label>
+                                <input name="facebook" type="text" id="facebook" size="50"></td>
+                        </tr>
+
+                        <tr>
+                            <td> Comments:</td>
+                            <td></td>
+                            <td>
+                                <label for="comments"></label>
+                                <textarea name="comments" cols="50" rows="5" id="comments"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td> Picture:</td>
+                            <td></td>
+                            <td>
+                                <label for="picture"></label>
+                                <input type="file" id="picture" size="50" name="picture" accept="image/*"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <input type="submit" name = "BTSubmit" value="Submit">
+                                <input type="reset" name = "BTReset" value="Reset"></td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</section>
+<!--
+====================================================================================
+Form to Search contact
+====================================================================================
+-->
+<section id = "table2">
+
+    <h2 align="center"><strong>Search Contact:</strong></h2>
+
+    <form action = "searchprocess.phtml" method ="post">
+
+        <table border="0" align="center" cellpadding="0" cellspacing="1">
+            <tr>
+                <td width="19%"> First Name:</td>
+                <td width="2%"></td>
+                <td width="78%">
+                    <label for="fnameSearch"></label>
+                    <input name="fnameSearch" type="text" id="fnameSearch" size="50"></td>
+            </tr>
+            <tr>
+                <td> Last Name:</td>
+                <td></td>
+                <td>
+                    <label for="lnameSearch"></label>
+                    <input name="lnameSearch" type="text" id="lnameSearch" size="50">
+                    <button type="submit" name="BTSearch">OK</button></td>
+
+            </tr>
+
+        </table>
+    </form>
+</section>
+<!--
+====================================================================================
+Form to List contact
+====================================================================================
+-->
+<section id = "table3">
+
+       <h2 align="center"><strong>List Contact:</strong></h2>
+
+    <form action="listcontact.phtml" method="post">
+        <table  border="0" align="center" cellspacing="1" cellpadding="0">
+            <tr>
+                <td>
+                    <button type="submit" name="BTList">List Contact</button></td>
+            </tr>
+        </table>
+    </form>
+</section>
+
+<footer>
+    <!--View Source link -->
+    <a href="/folder_view/vs.php?s=<?php echo __FILE__?>" target="_blank">View Source</a>
+</footer>
+
+</body>
+</html>

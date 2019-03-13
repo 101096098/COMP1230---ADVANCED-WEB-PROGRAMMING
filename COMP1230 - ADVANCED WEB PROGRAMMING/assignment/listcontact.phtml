@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--
+------------------------------------------------------------------------------------------
+COMP1230 -  Assignment 1
+------------------------------------------------------------------------------------------
+Objective: To create a simple PHP application using a flat file (no database).
+For this project, you will be creating an application called CONTACT. The application is for personal use.
+
+Operations:
+The user must be able to perform the following operations:
+1. list contacts (show first, last name, picture and modify and delete links in a table)
+2. edit contact by clicking on modify link in the contacts list
+3. deleting a contact by clicking on delete link in the contact list (use javascript to confirm the
+deletion)
+4. search for a contact by the first name and/or last name
+5. Create a new contact.
+
+****************************************************************************************
+        File with HTML and PHP -
+        Operation 1 - List contacts
+****************************************************************************************
+
+-->
+    <meta charset="UTF-8">
+    <meta name="keywords" content="PHP, Assignment, Comp1230">
+    <meta name="author" content="Renata Moura">
+    <meta name="description" content="PHP Assignment">
+    <meta charset="UTF-8">
+
+    <title>List Contact</title>
+
+    <!-- CSS style -->
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+
+<body>
+
+<header>
+    <h1>List Contacts</h1>
+</header>
+
+<form>
+    <input type="button" value="Return" onClick="JavaScript: window.history.back();">
+
+</form>
+
+<section>
+    <table width=100% class=tabelLines>
+        <tr>
+            <td width="1%"> <div id="test" style="display: none"> ID </div> </td>
+            <td width="5%" align="center">Picture </td>
+            <td width="1%" align="center">Title </td>
+            <td width="8%" align="center">First Name </td>
+            <td width="8%" align="center">Last Name </td>
+            <td width="14%" align="center">Email </td>
+            <td width="15%" align="center">Site </td>
+            <td width="8%" align="center">Cell Number </td>
+            <td width="8%" align="center">Home Number </td>
+            <td width="8%" align="center">Office Number </td>
+            <td width="7%" align="center">Twitter </td>
+            <td width="7%" align="center">Facebook </td>
+            <td width="10%" align="center">Comments </td>
+            <td width='5%' align="center">Buttons</td>
+        </tr>
+
+            <?php
+            include "functions.php";
+
+            if (isset($_POST['BTList']))
+            {
+                $bigArray = openfile();
+                usort($bigArray, 'cmp');
+
+                echo "<table width='100%' class='tabelLines'>";
+
+                for ($i = 0; $i < count($bigArray); $i++)
+                {
+                    if(!$bigArray[$i]['id'] == null)
+                    {
+
+                        echo "<tr>";
+                        echo "<td width='1%'><div id='test' style='display: none'>" . $bigArray[$i]['id'] . "</div>";
+                        echo "</td>";
+
+                        echo "<td width='1%'>";
+                        echo "<img width=80px height=80px align=right src='images/" . $bigArray[$i]['id'] . ".jpeg'>";
+                        echo "</td>";
+
+                        echo "<td width='1%' align='center'>" . $bigArray[$i]['title'] . "</td>";
+                        echo "<td width='8%' align='center'>" . $bigArray[$i]['fname'] . "</td>";
+                        echo "<td width='8%' align='center'>" . $bigArray[$i]['lname'] . "</td>";
+                        echo "<td width='14%' align='center'>" . $bigArray[$i]['email'] . "</td>";
+                        echo "<td width='15%' align='center'>" . $bigArray[$i]['site'] . "</td>";
+                        echo "<td width='8%' align='center'>" . $bigArray[$i]['cellnumber'] . "</td>";
+                        echo "<td width='8%' align='center'>" . $bigArray[$i]['homenumber'] . "</td>";
+                        echo "<td width='8%' align='center'>" . $bigArray[$i]['officenumber'] . "</td>";
+                        echo "<td width='7%' align='center'>" . $bigArray[$i]['twitter'] . "</td>";
+                        echo "<td width='7%' align='center'>" . $bigArray[$i]['facebook'] . "</td>";
+                        echo "<td width='10%' align='center'>" . $bigArray[$i]['comments'] . "</td>";
+
+                        echo "<td width=5% align='center'>";
+                        echo "<form method='post' action='editprocess.phtml'>";
+                        echo "<button type='submit' name='BTEdit' value = " . $bigArray[$i]['id'] . ">Edit</button>";
+                        echo "</form>";
+
+
+                        echo "<form method = 'post' action ='delete.phtml'>";
+                        echo "<button type = 'submit' name ='BTDelete' value=" . $bigArray[$i]['id'] . "> Delete </button>";
+                        echo "</form>";
+                        echo "</td>";
+
+                        echo "</tr>";
+                    }
+                }
+
+                endfile();
+
+            }
+
+            ?>
+
+    </table>
+</section>
+
+<footer>
+    <!--View Source link -->
+    <a href="/folder_view/vs.php?s=<?php echo __FILE__?>" target="_blank">View Source</a>
+</footer>
+
+
+</body>
+
+</html>
